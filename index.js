@@ -15,18 +15,11 @@ const getHtml = async (url) => {
   return html;
 };
 
-const checkDate = ($) => {
-  let shouldContinue;
+const checkDate = (lastPostDate) => {
+  const postDate = parseInt(lastPostDate.split(' ')[4]);
+  const yesterday = (new Date()).getDate() - 1;
 
-  $('.clock').each((i, el) => {
-    const postDateString = $(el).text();
-    const postDate = parseInt(postDateString.split(' ')[4]);
-    const today = (new Date()).getDate();
-
-    shouldContinue = postDate === today - 1;
-  });
-
-  return shouldContinue;
+  return postDate >= yesterday;
 };
 
 const results = [];
@@ -54,7 +47,8 @@ const getReleases = async (page = 1) => {
     }
   });
 
-  const shouldContinue = checkDate($);
+  const lastPostDate = $('.clock').last().text();
+  const shouldContinue = checkDate(lastPostDate);
 
   if (shouldContinue) {
     getReleases(page + 1);

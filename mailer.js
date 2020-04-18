@@ -20,7 +20,7 @@ const getHtmlResults = (results) => {
   return html;
 };
 
-async function sendMail(results) {
+const sendMail = async (results) => {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
