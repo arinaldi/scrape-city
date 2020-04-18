@@ -1,8 +1,9 @@
-import axios from 'axios';
-import cheerio from 'cheerio';
-// import cron from 'node-cron';
+require('dotenv').config();
+const axios = require('axios');
+const cheerio = require('cheerio');
 
-import artists from './artists';
+const artists = require('./artists');
+const sendMail = require('./mailer');
 
 const BASE_URL = 'http://newalbumreleases.net/category/cat/page';
 const artistsLower = artists.map(artist => (
@@ -22,7 +23,7 @@ const checkDate = ($) => {
     const postDate = parseInt(postDateString.split(' ')[4]);
     const today = (new Date()).getDate();
 
-    shouldContinue = postDate === today;
+    shouldContinue = postDate === today - 1;
   });
 
   return shouldContinue;
@@ -58,16 +59,8 @@ const getReleases = async (page = 1) => {
   if (shouldContinue) {
     getReleases(page + 1);
   } else if (results.length > 0) {
-    results.forEach(result => {
-      console.log(result.title);
-      console.log(result.link);
-    });
+    sendMail(results);
   }
 };
 
 getReleases();
-// 0 8 * * *
-// cron.schedule('* * * * *', () => {
-//   console.log('RUNNING THE CRON');
-//   getReleases();
-// });

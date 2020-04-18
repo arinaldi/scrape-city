@@ -392,5 +392,4 @@ const artists = [
   'VV',
 ];
 
-export default artists;
-
+module.exports = artists;
