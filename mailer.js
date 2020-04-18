@@ -35,7 +35,7 @@ async function sendMail(results) {
     await transporter.sendMail({
       from: `"Scrape City" <${process.env.EMAIL_FROM}>`,
       to: process.env.EMAIL_TO,
-      subject: `NAR results for ${(new Date().toLocaleDateString())}`,
+      subject: `NAR results for ${(new Date().toLocaleString())}`,
       text,
       html,
     });
