@@ -3,21 +3,22 @@ const nodemailer = require('nodemailer');
 const getTextResults = (results) => {
   let text = '';
 
-  results.forEach(({ title, link }) => {
-    text = `${text}\n${title}: ${link}`;
+  results.forEach(({ title, link }, index) => {
+    const newLine = index > 0 ? '\n' : '';
+    text = `${text}${newLine}• ${title}: ${link}`;
   });
 
   return text;
 };
 
 const getHtmlResults = (results) => {
-  let html = '';
+  let html = '<ul>';
 
   results.forEach(({ title, link }) => {
-    html = `${html}<br /><a href="${link}">${title}</a>`;
+    html = `${html}<li><a href="${link}">${title}</a></li>`;
   });
 
-  return html;
+  return `${html}</ul>`;
 };
 
 const sendMail = async (results) => {
@@ -39,6 +40,7 @@ const sendMail = async (results) => {
       text,
       html,
     });
+    /* eslint-disable no-console */
     console.log('Mail sent successfully');
   } catch (err) {
     console.error(err.message);
