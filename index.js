@@ -31,11 +31,12 @@ const getReleases = async (artists, page = 1) => {
       results.push(post);
     }
   });
+  console.log(JSON.stringify(results));
+  console.log({ shouldContinue });
 
   if (shouldContinue) {
     getReleases(artists, page + 1);
   } else if (results.length > 0) {
-    console.log('results', JSON.stringify(results));
     sendMail(results);
   }
 };
