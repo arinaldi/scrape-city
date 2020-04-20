@@ -36,7 +36,7 @@ const getReleases = async (artists, page = 1) => {
     getReleases(artists, page + 1);
   } else if (results.length > 0) {
     sendMail(results);
-  } else if (results.lenth === 0) {
+  } else if (results.length === 0) {
     console.log('No results; mail not sent');
   }
 };
