@@ -2,7 +2,7 @@ require('dotenv').config();
 const cheerio = require('cheerio');
 
 const sendMail = require('./lib/mailer');
-const { checkDate, getHtml } = require('./lib/utils');
+const { checkDate, getHtml, sortData } = require('./lib/utils');
 const getArtists = require('./lib/getArtists');
 
 const results = [];
@@ -35,7 +35,7 @@ const getReleases = async (artists, page = 1) => {
   if (shouldContinue) {
     getReleases(artists, page + 1);
   } else if (results.length > 0) {
-    sendMail(results);
+    sendMail(sortData(results));
   } else if (results.length === 0) {
     console.log('No results; mail not sent');
   }
