@@ -43,9 +43,9 @@ const getReleases = async (artists, page = 1) => {
 
 const go = async () => {
   const data = await getArtists();
-  const artists = new Set(data.map(artist => (
-    artist.toLowerCase().replace('&', 'and')),
-  ));
+  const artists = new Set(
+    data.map(artist => artist.toLowerCase().replace('&', 'and')),
+  );
 
   getReleases(artists, 1);
 };
