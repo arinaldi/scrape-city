@@ -6,9 +6,11 @@ const { checkDate, getHtml, sortData } = require('./lib/utils');
 const getArtists = require('./lib/getArtists');
 
 const results = [];
+const BASE_URL = process.env.BASE_URL;
 
 const getReleases = async (artists, page = 1) => {
-  const html = await getHtml(`${process.env.BASE_URL}/${page}`);
+  const url = page === 1 ? BASE_URL : `${BASE_URL}/page/${page}`;
+  const html = await getHtml(url);
   const $ = cheerio.load(html);
   const posts = $('.title > h2 > a')
     .get()
