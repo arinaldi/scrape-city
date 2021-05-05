@@ -2,7 +2,13 @@ require('dotenv').config();
 const cheerio = require('cheerio');
 
 const sendMail = require('./lib/mailer');
-const { checkDate, getHtml, sortData } = require('./lib/utils');
+const {
+  checkDate,
+  getHtml,
+  getHtmlResults,
+  getTextResults,
+  sortData,
+} = require('./lib/utils');
 const getArtists = require('./lib/getArtists');
 
 const results = [];
@@ -37,9 +43,16 @@ const getReleases = async (artists, page = 1) => {
   if (shouldContinue) {
     getReleases(artists, page + 1);
   } else if (results.length > 0) {
-    sendMail(sortData(results));
+    const data = sortData(results);
+    const html = getHtmlResults(data);
+    const text = getTextResults(data);
+
+    sendMail(html, text);
   } else if (results.length === 0) {
-    console.log('No results; mail not sent');
+    const message = 'No results today';
+    const htmlMessage = `<p>${message}</p>`;
+
+    sendMail(htmlMessage, message);
   }
 };
 
