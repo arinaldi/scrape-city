@@ -20,14 +20,14 @@ const getReleases = async (artists, page = 1) => {
   const $ = cheerio.load(html);
   const posts = $('.title > h2 > a')
     .get()
-    .map(post => ({
+    .map((post) => ({
       title: post.attribs.title.replace('Permanent Link to ', ''),
       link: post.attribs.href,
     }));
   const lastPostDate = $('.clock').last().text();
   const shouldContinue = checkDate(lastPostDate);
 
-  posts.forEach(post => {
+  posts.forEach((post) => {
     const enDashIndex = post.title.indexOf('–');
     const artist = post.title
       .substring(0, enDashIndex)
@@ -59,7 +59,7 @@ const getReleases = async (artists, page = 1) => {
 const go = async () => {
   const data = await getArtists();
   const artists = new Set(
-    data.map(artist => artist.toLowerCase().replace('&', 'and')),
+    data.map((artist) => artist.toLowerCase().replace('&', 'and')),
   );
 
   getReleases(artists, 1);
