@@ -7,6 +7,7 @@ const {
   getHtml,
   getHtmlResults,
   getTextResults,
+  sanitizeString,
   sortData,
 } = require('./lib/utils');
 const getArtists = require('./lib/getArtists');
@@ -14,7 +15,7 @@ const getArtists = require('./lib/getArtists');
 const results = [];
 const BASE_URL = process.env.BASE_URL;
 
-const getReleases = async (artists, page = 1) => {
+async function getReleases(artists, page = 1) {
   const url = page === 1 ? BASE_URL : `${BASE_URL}/page/${page}`;
   const html = await getHtml(url);
   const $ = cheerio.load(html);
@@ -29,11 +30,8 @@ const getReleases = async (artists, page = 1) => {
 
   posts.forEach((post) => {
     const enDashIndex = post.title.indexOf('–');
-    const artist = post.title
-      .substring(0, enDashIndex)
-      .replace('&', 'and')
-      .toLowerCase()
-      .trim();
+    const title = post.title.substring(0, enDashIndex);
+    const artist = sanitizeString(title);
 
     if (artists.has(artist)) {
       results.push(post);
@@ -54,15 +52,13 @@ const getReleases = async (artists, page = 1) => {
 
     sendMail(htmlMessage, message);
   }
-};
+}
 
-const go = async () => {
+async function go() {
   const data = await getArtists();
-  const artists = new Set(
-    data.map((artist) => artist.toLowerCase().replace('&', 'and')),
-  );
+  const artists = new Set(data.map((artist) => sanitizeString(artist)));
 
   getReleases(artists, 1);
-};
+}
 
 go();
